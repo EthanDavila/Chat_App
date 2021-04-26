@@ -87,6 +87,11 @@ public class Chat_Server extends javax.swing.JFrame {
         jPanel3.add(TxtMessage, gridBagConstraints);
 
         btnSendMessage.setText("Send");
+        btnSendMessage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSendMessageActionPerformed(evt);
+            }
+        });
         jPanel3.add(btnSendMessage, new java.awt.GridBagConstraints());
 
         btnInitServer.setText("Iniciar Servidor");
@@ -139,6 +144,30 @@ public class Chat_Server extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnInitServerActionPerformed
 
+    private void btnSendMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendMessageActionPerformed
+        String Message = "";
+        try {
+            Message = TxtMessage.getText().trim();
+            Out = new DataOutputStream(sc.getOutputStream());
+            Out.writeUTF(Message);
+            Chat.setText(Chat.getText() + "\n" + "Local: " + Message);
+            TxtMessage.setText("");
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_btnSendMessageActionPerformed
+
+    
+    private String ReadMessage(String Message){
+        try {
+            In = new DataInputStream(sc.getInputStream());
+            Message = In.readUTF();
+            Message = "Cliente: " + Message;
+            Chat.setText(Chat.getText() + "\n" + Message);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return Message;
+    }
     /**
      * @param args the command line arguments
      */

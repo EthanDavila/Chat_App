@@ -5,6 +5,8 @@
  */
 package Chat;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -18,11 +20,14 @@ public class Chat_Cliente extends javax.swing.JFrame {
     private Socket sc;
     private int Puerto;
     private String IP;
+    private DataOutputStream Out;
+    private DataInputStream In;
     /**
      * Creates new form NewJFrame
      */
     public Chat_Cliente() {
         initComponents();
+        setTitle("Chat App - Cliente");
     }
 
     /**
@@ -37,9 +42,9 @@ public class Chat_Cliente extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        TxtPuerto = new javax.swing.JTextField();
+        TxtIP = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        TxtIp = new javax.swing.JTextField();
+        TxtPuerto = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         Chat = new javax.swing.JTextArea();
@@ -52,16 +57,16 @@ public class Chat_Cliente extends javax.swing.JFrame {
 
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
-        jLabel1.setText("Ingrese el Puerto: ");
+        jLabel1.setText("Ingrese el IP: ");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(6, 0, 6, 0);
         jPanel1.add(jLabel1, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 0.1;
-        jPanel1.add(TxtPuerto, gridBagConstraints);
+        jPanel1.add(TxtIP, gridBagConstraints);
 
-        jLabel2.setText("Ingrese la IP: ");
+        jLabel2.setText("Ingrese el Puerto: ");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -72,7 +77,7 @@ public class Chat_Cliente extends javax.swing.JFrame {
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 0.1;
-        jPanel1.add(TxtIp, gridBagConstraints);
+        jPanel1.add(TxtPuerto, gridBagConstraints);
 
         Chat.setEditable(false);
         Chat.setColumns(20);
@@ -97,6 +102,11 @@ public class Chat_Cliente extends javax.swing.JFrame {
         jPanel3.add(TxtMessage, gridBagConstraints);
 
         btnSendMessage.setText("Send");
+        btnSendMessage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSendMessageActionPerformed(evt);
+            }
+        });
         jPanel3.add(btnSendMessage, new java.awt.GridBagConstraints());
 
         btnConectar.setText("Conectar al Servidor");
@@ -141,7 +151,7 @@ public class Chat_Cliente extends javax.swing.JFrame {
 
     private void btnConectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConectarActionPerformed
         Puerto = Integer.parseInt(TxtPuerto.getText());
-        IP = TxtIp.getText();
+        IP = TxtIP.getText();
         try {
             sc = new Socket(IP, Puerto);
             Chat.setText(Chat.getText() + "\n" + "-- Conectado al servidor -- ");
@@ -150,6 +160,25 @@ public class Chat_Cliente extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnConectarActionPerformed
 
+    private void btnSendMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendMessageActionPerformed
+        String Message = "";
+        try {
+            Message = TxtMessage.getText().trim();
+            Out = new DataOutputStream(sc.getOutputStream());
+            Out.writeUTF(Message);
+            Chat.setText(Chat.getText() + "\n" + "Cliente: " + Message);
+            TxtMessage.setText("");
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_btnSendMessageActionPerformed
+
+    private String ReadMessage(String Message) throws IOException{
+        In = new DataInputStream(sc.getInputStream());
+        Message = In.readUTF();
+        Message = "Local: " + Message;
+        Chat.setText(Chat.getText() + "\n" + Message);
+        return Message;
+    }
     /**
      * @param args the command line arguments
      */
@@ -188,7 +217,7 @@ public class Chat_Cliente extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea Chat;
-    private javax.swing.JTextField TxtIp;
+    private javax.swing.JTextField TxtIP;
     private javax.swing.JTextField TxtMessage;
     private javax.swing.JTextField TxtPuerto;
     private javax.swing.JButton btnConectar;
