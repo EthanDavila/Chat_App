@@ -155,7 +155,6 @@ public class Chat_Server extends javax.swing.JFrame {
         } catch (Exception e) {
         }
     }//GEN-LAST:event_btnSendMessageActionPerformed
-
     
     private String ReadMessage(String Message){
         try {

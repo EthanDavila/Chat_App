@@ -10,6 +10,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -161,7 +163,7 @@ public class Chat_Cliente extends javax.swing.JFrame {
     }//GEN-LAST:event_btnConectarActionPerformed
 
     private void btnSendMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendMessageActionPerformed
-        String Message = "";
+    String Message = "";
         try {
             Message = TxtMessage.getText().trim();
             Out = new DataOutputStream(sc.getOutputStream());
@@ -169,14 +171,18 @@ public class Chat_Cliente extends javax.swing.JFrame {
             Chat.setText(Chat.getText() + "\n" + "Cliente: " + Message);
             TxtMessage.setText("");
         } catch (Exception e) {
-        }
+        }        
     }//GEN-LAST:event_btnSendMessageActionPerformed
 
-    private String ReadMessage(String Message) throws IOException{
-        In = new DataInputStream(sc.getInputStream());
-        Message = In.readUTF();
-        Message = "Local: " + Message;
-        Chat.setText(Chat.getText() + "\n" + Message);
+    private String ReadMessage(String Message){
+        try {
+            In = new DataInputStream(sc.getInputStream());
+            Message = In.readUTF();
+            Message = "Cliente: " + Message;
+            Chat.setText(Chat.getText() + "\n" + Message);
+        } catch (IOException ex) {
+            Logger.getLogger(Chat_Cliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return Message;
     }
     /**
