@@ -119,7 +119,7 @@ public class Chat_Cliente extends javax.swing.JFrame {
         TxtMessage.setText("");
     }//GEN-LAST:event_btnSendMessageActionPerformed
 
-    private String ReadMessage(String Message){
+    private static String ReadMessage(String Message){
         try {
             In = new DataInputStream(sc.getInputStream());
             Message = In.readUTF();
@@ -164,7 +164,7 @@ public class Chat_Cliente extends javax.swing.JFrame {
                 new Chat_Cliente().setVisible(true);
             }
         });
-        
+       
         String Message = "";
         String IP = "";
         try {

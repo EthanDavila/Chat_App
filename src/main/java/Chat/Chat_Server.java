@@ -116,7 +116,7 @@ public class Chat_Server extends javax.swing.JFrame {
         TxtMessage.setText("");
     }//GEN-LAST:event_btnSendMessageActionPerformed
     
-    private String ReadMessage(String Message){
+    private static String ReadMessage(String Message){
         try {
             In = new DataInputStream(sc.getInputStream());
             Message = In.readUTF();
