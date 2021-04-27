@@ -18,11 +18,11 @@ import java.util.logging.Logger;
  * @author Jasmi
  */
 public class Chat_Server extends javax.swing.JFrame {
-    private ServerSocket servidor;
-    private Socket sc;
-    private DataOutputStream Out;
-    private DataInputStream In;
-    private int Puerto;
+    public static ServerSocket servidor;
+    public static Socket sc;
+    public static DataOutputStream Out;
+    public static DataInputStream In;
+    public static int Puerto;
     
     /**
      * Creates new form Chat_Server
@@ -42,27 +42,14 @@ public class Chat_Server extends javax.swing.JFrame {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        TxtPuerto = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         Chat = new javax.swing.JTextArea();
         jPanel3 = new javax.swing.JPanel();
         TxtMessage = new javax.swing.JTextField();
         btnSendMessage = new javax.swing.JButton();
-        btnInitServer = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jPanel1.setLayout(new java.awt.GridBagLayout());
-
-        jLabel1.setText("Ingrese el Puerto: ");
-        jPanel1.add(jLabel1, new java.awt.GridBagConstraints());
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 0.1;
-        jPanel1.add(TxtPuerto, gridBagConstraints);
 
         Chat.setEditable(false);
         Chat.setColumns(20);
@@ -73,11 +60,11 @@ public class Chat_Server extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
         );
 
         jPanel3.setLayout(new java.awt.GridBagLayout());
@@ -94,13 +81,6 @@ public class Chat_Server extends javax.swing.JFrame {
         });
         jPanel3.add(btnSendMessage, new java.awt.GridBagConstraints());
 
-        btnInitServer.setText("Iniciar Servidor");
-        btnInitServer.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnInitServerActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -109,40 +89,20 @@ public class Chat_Server extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnInitServer, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(btnInitServer, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(6, 6, 6)
+                .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE))
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnInitServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInitServerActionPerformed
-        Puerto = Integer.parseInt(TxtPuerto.getText());
-        try {
-            servidor = new ServerSocket(Puerto);
-            Chat.setText(Chat.getText() + "\n" + "-- Servidor Iniciado -- ");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }//GEN-LAST:event_btnInitServerActionPerformed
 
     private void btnSendMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendMessageActionPerformed
         String Message = "";
@@ -150,10 +110,10 @@ public class Chat_Server extends javax.swing.JFrame {
             Message = TxtMessage.getText().trim();
             Out = new DataOutputStream(sc.getOutputStream());
             Out.writeUTF(Message);
-            Chat.setText(Chat.getText() + "\n" + "Local: " + Message);
-            TxtMessage.setText("");
         } catch (Exception e) {
         }
+        Chat.setText(Chat.getText() + "\n" + "Server: " + Message);
+        TxtMessage.setText("");
     }//GEN-LAST:event_btnSendMessageActionPerformed
     
     private String ReadMessage(String Message){
@@ -193,23 +153,34 @@ public class Chat_Server extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Chat_Server.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Chat_Server().setVisible(true) ;
             }
         });
+        
+        String Message = "";
+        try {
+            Chat.setText("-- Servidor Iniciado --");
+            servidor  = new ServerSocket(50);
+            sc = servidor.accept();
+            In = new DataInputStream(sc.getInputStream());
+            Out = new DataOutputStream(sc.getOutputStream());
+            
+            while (true){
+                Message = In.readUTF();
+                Chat.setText(Chat.getText().trim() + "\nCliente: " + Message);
+            }
+        } catch (IOException ex) {
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextArea Chat;
+    public static javax.swing.JTextArea Chat;
     private javax.swing.JTextField TxtMessage;
-    private javax.swing.JTextField TxtPuerto;
-    private javax.swing.JButton btnInitServer;
     private javax.swing.JButton btnSendMessage;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;

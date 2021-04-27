@@ -8,8 +8,10 @@ package Chat;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,12 +20,12 @@ import java.util.logging.Logger;
  * @author Jasmi
  */
 public class Chat_Cliente extends javax.swing.JFrame {
-    private ServerSocket servidor;
-    private Socket sc;
-    private int Puerto;
-    private String IP;
-    private DataOutputStream Out;
-    private DataInputStream In;
+    public static ServerSocket servidor;
+    public static Socket sc;
+    public static int Puerto;
+    public static String IP;
+    public static DataOutputStream Out;
+    public static DataInputStream In;
     /**
      * Creates new form NewJFrame
      */
@@ -42,44 +44,14 @@ public class Chat_Cliente extends javax.swing.JFrame {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        TxtIP = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        TxtPuerto = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         Chat = new javax.swing.JTextArea();
         jPanel3 = new javax.swing.JPanel();
         TxtMessage = new javax.swing.JTextField();
         btnSendMessage = new javax.swing.JButton();
-        btnConectar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jPanel1.setLayout(new java.awt.GridBagLayout());
-
-        jLabel1.setText("Ingrese el IP: ");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.insets = new java.awt.Insets(6, 0, 6, 0);
-        jPanel1.add(jLabel1, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 0.1;
-        jPanel1.add(TxtIP, gridBagConstraints);
-
-        jLabel2.setText("Ingrese el Puerto: ");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(6, 0, 6, 0);
-        jPanel1.add(jLabel2, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 0.1;
-        jPanel1.add(TxtPuerto, gridBagConstraints);
 
         Chat.setEditable(false);
         Chat.setColumns(20);
@@ -90,11 +62,13 @@ public class Chat_Cliente extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE))
         );
 
         jPanel3.setLayout(new java.awt.GridBagLayout());
@@ -111,13 +85,6 @@ public class Chat_Cliente extends javax.swing.JFrame {
         });
         jPanel3.add(btnSendMessage, new java.awt.GridBagConstraints());
 
-        btnConectar.setText("Conectar al Servidor");
-        btnConectar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnConectarActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -126,52 +93,30 @@ public class Chat_Cliente extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnConectar)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(btnConectar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(6, 6, 6)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnConectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConectarActionPerformed
-        Puerto = Integer.parseInt(TxtPuerto.getText());
-        IP = TxtIP.getText();
-        try {
-            sc = new Socket(IP, Puerto);
-            Chat.setText(Chat.getText() + "\n" + "-- Conectado al servidor -- ");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }//GEN-LAST:event_btnConectarActionPerformed
-
     private void btnSendMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendMessageActionPerformed
-    String Message = "";
+        String Message = "";
         try {
             Message = TxtMessage.getText().trim();
             Out = new DataOutputStream(sc.getOutputStream());
             Out.writeUTF(Message);
-            Chat.setText(Chat.getText() + "\n" + "Cliente: " + Message);
-            TxtMessage.setText("");
         } catch (Exception e) {
         }        
+        Chat.setText(Chat.getText() + "\n" + "Cliente: " + Message);
+        TxtMessage.setText("");
     }//GEN-LAST:event_btnSendMessageActionPerformed
 
     private String ReadMessage(String Message){
@@ -219,18 +164,34 @@ public class Chat_Cliente extends javax.swing.JFrame {
                 new Chat_Cliente().setVisible(true);
             }
         });
+        
+        String Message = "";
+        String IP = "";
+        try {
+            InetAddress address = InetAddress.getLocalHost();
+            IP = address.getHostAddress();
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(Chat_Cliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        try {
+            Chat.setText("-- Servidor Conectado --");
+            sc = new Socket(IP, 50);
+            In = new DataInputStream(sc.getInputStream());
+            Out = new DataOutputStream(sc.getOutputStream());
+            
+            while(true){
+                Message = In.readUTF();
+                Chat.setText(Chat.getText().trim() + "\nServer: " + Message);
+            }
+        } catch (IOException ex) {
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextArea Chat;
-    private javax.swing.JTextField TxtIP;
+    public static javax.swing.JTextArea Chat;
     private javax.swing.JTextField TxtMessage;
-    private javax.swing.JTextField TxtPuerto;
-    private javax.swing.JButton btnConectar;
     private javax.swing.JButton btnSendMessage;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
